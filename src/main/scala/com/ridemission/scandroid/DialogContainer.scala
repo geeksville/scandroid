@@ -5,13 +5,16 @@ import android.os._
 
 import scala.collection.mutable.ListMap
 
-/// A scala friendly API for dialog operations
+/// A scala friendly API for raising dialogs
+/// Mixin this trait to your activity then:
+/// val dialog = addDialog(R.layoutid) { dialog, bundle => initcode }
+/// dialog.show()
 trait DialogContainer extends Activity {
 
   type DialogCreateFunct = Bundle => Dialog
   type DialogPrepareFunct = (Dialog, Bundle) => Unit
 
-  private var nextDialogId = 1
+  private val nextDialogId = new IDFactory
   private var ids = new ListMap[Int, DialogId]
 
   case class DialogId(num: Int, create: DialogCreateFunct, prepare: DialogPrepareFunct) {
@@ -53,9 +56,8 @@ trait DialogContainer extends Activity {
   /// @create a function that returns the newly created dialog
   /// @prepare populates the dialog with appropriate field contents
   def addCreateDialog(create: DialogCreateFunct)(prepare: DialogPrepareFunct): DialogId = {
-    nextDialogId += 1
-    val d = new DialogId(nextDialogId, create, prepare)
-    ids += nextDialogId -> d
+    val d = new DialogId(nextDialogId.create, create, prepare)
+    ids += d.num -> d
     d
   }
 
