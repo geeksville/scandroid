@@ -4,7 +4,7 @@ import android.content._
 
 object DBUtil {
   /// Helper to convert scala Maps to android ContentValues
-  implicit def toContentValues[T](vals: Map[String, T]) = {
+  implicit def toContentValues[T](vals: scala.collection.Map[String, T]) = {
     val result = new ContentValues
     vals.foreach { pair =>
       val key = pair._1
