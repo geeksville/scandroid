@@ -6,10 +6,22 @@ import android.database.sqlite._
 
 case class TableDefinition(val name: String, val columnDefs: String)
 
+/// Provides SQLiteOpenHelper access to SQLite databases (for auto upgrading etc...)
 /// @param dbVersion The android version # we can accept without needing to upgrade DB
-class SQLiteWrapper(context: Context, val databaseName: String, val dbVersion: Int, val tableDefs: Seq[TableDefinition]) extends AndroidLogger {
+trait SQLiteWrapper extends AndroidLogger {
+  /// Must be provided by subclass
+  def context: Context
 
-  private val dbHelper = new SQLiteOpenHelper(context, databaseName, null, dbVersion) {
+  /// Must be provided by subclass
+  def databaseName: String
+
+  /// Must be provided by subclass
+  def dbVersion: Int
+
+  /// Must be provided by subclass
+  def tableDefs: Seq[TableDefinition]
+
+  private lazy val dbHelper = new SQLiteOpenHelper(context, databaseName, null, dbVersion) {
     override def onCreate(db: SQLiteDatabase) {
       tableDefs.foreach { t => db.execSQL("create table " + t.name + "(" + t.columnDefs + ");") }
     }
@@ -22,7 +34,7 @@ class SQLiteWrapper(context: Context, val databaseName: String, val dbVersion: I
     }
   }
 
-  val db = dbHelper.getWritableDatabase
+  lazy val db = dbHelper.getWritableDatabase
 
   /// Close the database
   def close() { db.close() }
