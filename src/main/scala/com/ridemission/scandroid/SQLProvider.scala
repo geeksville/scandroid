@@ -7,7 +7,7 @@ import android.database.sqlite._
 import android.provider._
 
 /// A ContentProvider backed by an sql database
-abstract class SQLProvider(val context: Context, val databaseName: String, authority: String) extends ContentProvider with SQLiteWrapper {
+abstract class SQLProvider(val databaseName: String, authority: String) extends ContentProvider with SQLiteWrapper {
   /// a mapping from table name to the type of content at that path
   /// Subclass must provide
   /// Our URIs are formatted as content:://authority/tablename
@@ -15,7 +15,7 @@ abstract class SQLProvider(val context: Context, val databaseName: String, autho
 
   lazy val tableNames = tableNameToContentType.keys.toSeq
 
-  val resolver = context.getContentResolver
+  def resolver = getContext.getContentResolver
 
   val key_id = "_id"
 

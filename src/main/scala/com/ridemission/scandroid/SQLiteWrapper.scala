@@ -10,7 +10,7 @@ case class TableDefinition(val name: String, val columnDefs: String)
 /// @param dbVersion The android version # we can accept without needing to upgrade DB
 trait SQLiteWrapper extends AndroidLogger {
   /// Must be provided by subclass
-  def context: Context
+  def getContext: Context
 
   /// Must be provided by subclass
   def databaseName: String
@@ -21,7 +21,7 @@ trait SQLiteWrapper extends AndroidLogger {
   /// Must be provided by subclass
   def tableDefs: Seq[TableDefinition]
 
-  private lazy val dbHelper = new SQLiteOpenHelper(context, databaseName, null, dbVersion) {
+  private lazy val dbHelper = new SQLiteOpenHelper(getContext, databaseName, null, dbVersion) {
     override def onCreate(db: SQLiteDatabase) {
       tableDefs.foreach { t => db.execSQL("create table " + t.name + "(" + t.columnDefs + ");") }
     }
