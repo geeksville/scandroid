@@ -7,6 +7,7 @@ import android.view._
 import android.widget._
 import android.location._
 import android.os.Build
+import scala.language.implicitConversions
 
 class DialogExtensions(dialog: Dialog) {
   // easy android callback constructors

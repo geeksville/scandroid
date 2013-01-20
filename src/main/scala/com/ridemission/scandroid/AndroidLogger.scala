@@ -6,12 +6,9 @@ import android.util.Log
 
 /// extend this trait to get all sorts of easy logging wrappers
 /// FIXME - turn off logging when debugging is off
-trait AndroidLogger extends Logged {
+trait AndroidLogger {
   /// The tag string used for all our messages
   private def tag = getClass.toString
-
-  /// This is the standard scala log method
-  override def log(msg: String) = info(msg)
 
   def info(msg: String) = Log.i(tag, msg)
   def debug(msg: String) = Log.d(tag, msg)
