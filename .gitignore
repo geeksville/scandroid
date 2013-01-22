@@ -6,3 +6,4 @@ src_managed
 .classpath
 .project
 .cache
+.settings
