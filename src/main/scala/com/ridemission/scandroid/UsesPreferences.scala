@@ -12,7 +12,7 @@ trait UsesPreferences { context: Context =>
   lazy val preferences = PreferenceManager.getDefaultSharedPreferences(this)
 
   def stringPreference(s: String, defVal: String = "") = tryOrElse(preferences.getString(s, defVal), defVal)
-  def intPreference(s: String, defVal: Int) = tryOrElse(preferences.getInt(s, defVal), defVal)
+  def intPreference(s: String, defVal: Int) = tryOrElse(preferences.getString(s, defVal.toString).toInt, defVal)
   def boolPreference(s: String, defVal: Boolean) = tryOrElse(preferences.getBoolean(s, defVal), defVal)
 
   def tryOrElse[T](f: => T, elseVal: T) = try {
