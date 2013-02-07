@@ -25,16 +25,23 @@ import android.support.v4.view.ViewPager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.ViewGroup
 
-case class PageInfo(title: String, generator: () => Fragment)
+case class PageInfo(title: String, generator: () => Fragment) {
+  override def toString = title
+}
 
 /**
  * FIXME
  * We might want to use a version of the pager adapter that destroys fragments when not in use (so we don't spend cycles updating RC channels when not visible)
  *
  */
-class ScalaPagerAdapter(fm: FragmentManager, val pages: IndexedSeq[PageInfo]) extends FragmentPagerAdapter(fm) {
+class ScalaPagerAdapter(fm: FragmentManager, private var pages: IndexedSeq[PageInfo]) extends FragmentPagerAdapter(fm) {
 
   private var curPage: Option[PagerPage] = None
+
+  def setPages(p: IndexedSeq[PageInfo]) = {
+    pages = p
+    notifyDataSetChanged()
+  }
 
   override def getItem(position: Int) = {
     // getItem is called to instantiate the fragment for the given page.
