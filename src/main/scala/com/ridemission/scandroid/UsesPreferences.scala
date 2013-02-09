@@ -18,7 +18,7 @@ trait UsesPreferences {
   def stringPreference(s: String, defVal: String = "") = tryOrElse(preferences.getString(s, defVal), defVal)
   def intPreference(s: String, defVal: Int) = tryOrElse(preferences.getString(s, defVal.toString).toInt, defVal)
   def boolPreference(s: String, defVal: Boolean) = tryOrElse(preferences.getBoolean(s, defVal), defVal)
-  def floatPreference(s: String, defVal: Float) = tryOrElse(preferences.getFloat(s, defVal), defVal)
+  def floatPreference(s: String, defVal: Float) = tryOrElse(preferences.getString(s, defVal.toString).toFloat, defVal)
   def enumPreference[T <: Enumeration](s: String, enum: T, defVal: T#Value) = tryOrElse(enum.withName(preferences.getString(s, defVal.toString)), defVal)
 
   def tryOrElse[T](f: => T, elseVal: T) = try {
