@@ -74,6 +74,9 @@ object AndroidUtil {
   implicit def ButtonExtensions(view: Button) = new ViewExtensions(view)
   implicit def AdapterViewExtensions[ViewType <: AdapterView[_]](view: ViewType) = new AdapterViewExtensions(view)
 
+  // No use yet for this
+  // implicit def FragmentContext(f: Fragment) = f.getActivity
+
   /// Are we running on emulated hardware?
   def isEmulator = Build.MODEL == "google_sdk"
 }
