@@ -74,6 +74,10 @@ object AndroidUtil {
   implicit def ButtonExtensions(view: Button) = new ViewExtensions(view)
   implicit def AdapterViewExtensions[ViewType <: AdapterView[_]](view: ViewType) = new AdapterViewExtensions(view)
 
+  implicit def toDialogOnClickListener(handler: Int => Unit) = new DialogInterface.OnClickListener {
+    override def onClick(d: DialogInterface, which: Int) = handler(which)
+  }
+
   // No use yet for this
   // implicit def FragmentContext(f: Fragment) = f.getActivity
 
