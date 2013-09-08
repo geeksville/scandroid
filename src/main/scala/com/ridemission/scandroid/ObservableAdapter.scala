@@ -4,9 +4,9 @@ import android.widget._
 import android.view._
 import android.content._
 import android.util._
-
 import scala.collection.mutable._
 import scala.collection.script.Message
+import android.os.Handler
 
 /// Like array adapter, but watches Scala ObservableBuffers
 class ObservableAdapter[T](context: Context, resource: Int, textViewResId: Int, val array: ObservableBuffer[T]) extends BaseAdapter {
@@ -20,9 +20,18 @@ class ObservableAdapter[T](context: Context, resource: Int, textViewResId: Int, 
   /// to resource)
   var dropDownResource = resource
 
-  val sub = new array.Sub {
-    override def notify(cont: array.Pub, msg: Message[T] with Undoable) {
+  /**
+   * Cache this so we can do operations in the GUI thread in the future
+   */
+  private val handler = new Handler
+
+  val sub = new array.Sub with Runnable {
+    def run() {
       notifyDataSetChanged()
+    }
+
+    override def notify(cont: array.Pub, msg: Message[T] with Undoable) {
+      handler.post(this)
     }
   }
 
