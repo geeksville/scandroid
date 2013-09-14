@@ -9,18 +9,22 @@ import android.util.Log
 trait AndroidLogger {
   /// The tag string used for all our messages
   private lazy val tag = getClass.getSimpleName
-  private def enableTag = "scandroid"
 
   /// Is anyone even interested in looking at these log msgs
   /// Use adb shell setprop log.tag.scandroid VERBOSE
-  private def isLoggable(lvl: Int) = Log.isLoggable(enableTag, lvl)
+  // private def isLoggable(lvl: Int) = Log.isLoggable(enableTag, lvl)
+  private final def isLoggable(lvl: Int) = AndroidLogger.enable
 
-  def info(msg: => String) = if (isLoggable(Log.INFO)) Log.i(tag, msg)
-  def debug(msg: => String) = if (isLoggable(Log.DEBUG)) Log.d(tag, msg)
-  def error(msg: => String) = if (isLoggable(Log.ERROR)) Log.e(tag, msg)
-  def warn(msg: => String) = if (isLoggable(Log.WARN)) Log.w(tag, msg)
+  final def info(msg: => String) = if (isLoggable(Log.INFO)) Log.i(tag, msg)
+  final def debug(msg: => String) = if (isLoggable(Log.DEBUG)) Log.d(tag, msg)
+  final def error(msg: => String) = if (isLoggable(Log.ERROR)) Log.e(tag, msg)
+  final def warn(msg: => String) = if (isLoggable(Log.WARN)) Log.w(tag, msg)
 
   // Not available in android-2.1/7
   // def wtf(msg: String) = Log.wtf(tag, msg)
   // def wtf(msg: String, ex: Throwable) = Log.wtf(tag, msg, ex)
+}
+
+object AndroidLogger {
+  var enable = true
 }
