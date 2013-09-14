@@ -78,6 +78,10 @@ object AndroidUtil {
     override def onClick(d: DialogInterface, which: Int) = handler(which)
   }
 
+  implicit def toDialogOnClickListener(handler: () => Unit) = new DialogInterface.OnClickListener {
+    override def onClick(d: DialogInterface, which: Int) = handler()
+  }
+
   // No use yet for this
   // implicit def FragmentContext(f: Fragment) = f.getActivity
 
