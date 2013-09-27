@@ -20,6 +20,9 @@ class ObservableAdapter[T](context: Context, resource: Int, textViewResId: Int, 
   /// to resource)
   var dropDownResource = resource
 
+  /// The currently active array - we swap this in only in the GUI thread
+  private var active: Seq[T] = array
+
   /**
    * Cache this so we can do operations in the GUI thread in the future
    */
@@ -27,6 +30,7 @@ class ObservableAdapter[T](context: Context, resource: Int, textViewResId: Int, 
 
   val sub = new array.Sub with Runnable {
     def run() {
+      active = array
       notifyDataSetChanged()
     }
 
@@ -37,7 +41,7 @@ class ObservableAdapter[T](context: Context, resource: Int, textViewResId: Int, 
 
   array.subscribe(sub)
 
-  override def getCount = array.length
+  override def getCount = active.length
   override def getItem(n: Int): Object = getItem(n).asInstanceOf[AnyRef]
   override def getItemId(n: Int) = n
   override def getView(position: Int, convertView: View, parent: ViewGroup) =
@@ -68,7 +72,7 @@ class ObservableAdapter[T](context: Context, resource: Int, textViewResId: Int, 
           "ObservableAdapter requires the resource ID to be a TextView", e)
     }
 
-    val item = array(position)
+    val item = active(position)
     if (item.isInstanceOf[CharSequence]) {
       text.setText(item.asInstanceOf[CharSequence])
     } else {
