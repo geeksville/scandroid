@@ -4,9 +4,10 @@ import android.widget._
 import android.view._
 import android.content._
 import android.util._
-import scala.collection.mutable._
 import scala.collection.script.Message
 import android.os.Handler
+import scala.collection.mutable.ObservableBuffer
+import scala.collection.mutable.Undoable
 
 /// Like array adapter, but watches Scala ObservableBuffers
 class ObservableAdapter[T](context: Context, resource: Int, textViewResId: Int, val array: ObservableBuffer[T]) extends BaseAdapter {
@@ -21,7 +22,7 @@ class ObservableAdapter[T](context: Context, resource: Int, textViewResId: Int, 
   var dropDownResource = resource
 
   /// The currently active array - we swap this in only in the GUI thread
-  private var active: Seq[T] = array
+  private var active: scala.collection.immutable.Seq[T] = array.toIndexedSeq
 
   /**
    * Cache this so we can do operations in the GUI thread in the future
@@ -30,7 +31,7 @@ class ObservableAdapter[T](context: Context, resource: Int, textViewResId: Int, 
 
   val sub = new array.Sub with Runnable {
     def run() {
-      active = array
+      active = array.toIndexedSeq
       notifyDataSetChanged()
     }
 
