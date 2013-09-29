@@ -8,6 +8,7 @@ import android.widget._
 import android.location._
 import android.os.Build
 import scala.language.implicitConversions
+import android.util.TypedValue
 
 class DialogExtensions(dialog: Dialog) {
   // easy android callback constructors
@@ -87,4 +88,11 @@ object AndroidUtil {
 
   /// Are we running on emulated hardware?
   def isEmulator = Build.MODEL == "google_sdk"
+
+  /**
+   * A utility to convert dipPixels to values the android API understands (FIXME - move someplace better)
+   */
+  def dipPixel(context: Context, sz: Float) =
+    // TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sz, context.getResources.getDisplayMetrics).toInt
+    (sz * context.getResources().getDisplayMetrics().density).toInt
 }
