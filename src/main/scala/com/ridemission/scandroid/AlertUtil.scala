@@ -31,6 +31,19 @@ class SimpleOkayDialog(prompt: String, onOk: () => Unit, icon: Int = -1) extends
   }
 }
 
+object AlertUtil {
+  def show(activity: FragmentActivity, fragment: Fragment, name: String = "okay") {
+    // newFragment.show(activity.getSupportFragmentManager(), name)
+
+    // per http://stackoverflow.com/questions/12105064/actions-in-onactivityresult-and-error-can-not-perform-this-action-after-onsavei
+    // replacement for show() to avoid this problem
+    //dialog.show(getSupportFragmentManager(), null);
+    val ft = activity.getSupportFragmentManager.beginTransaction();
+    ft.add(fragment, name);
+    ft.commitAllowingStateLoss();
+  }
+}
+
 object SimpleOkayDialog {
   /**
    * Ask OK or cancel for a question...
@@ -38,8 +51,9 @@ object SimpleOkayDialog {
   def show(activity: FragmentActivity, prompt: String, icon: Int = -1, onOk: () => Unit = { () => }, name: String = "okay") {
     val newFragment = new SimpleOkayDialog(prompt, onOk, icon)
 
-    newFragment.show(activity.getSupportFragmentManager(), name)
+    AlertUtil.show(activity, newFragment, name)
   }
+
 }
 
 class SimpleYesNoDialog(prompt: String, onOk: () => Unit, onCancel: () => Unit) extends DialogFragment {
@@ -71,7 +85,7 @@ trait SimpleDialogClient extends Fragment {
   def showYesNo(prompt: String, onOk: () => Unit, onCancel: () => Unit = () => {}, name: String = "yesno") {
     val newFragment = new SimpleYesNoDialog(prompt, onOk, onCancel)
 
-    newFragment.show(getActivity.getSupportFragmentManager(), name)
+    AlertUtil.show(getActivity, newFragment, name)
   }
 
   /**
