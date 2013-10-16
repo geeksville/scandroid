@@ -56,7 +56,7 @@ object SimpleOkayDialog {
 
 }
 
-class SimpleYesNoDialog(prompt: String, onOk: () => Unit, onCancel: () => Unit) extends DialogFragment {
+class SimpleYesNoDialog(prompt: String, onOk: () => Unit, onCancel: () => Unit = () => {}) extends DialogFragment {
   override def onCreateDialog(savedInstanceState: Bundle) = {
     val builder = new AlertDialog.Builder(getActivity)
 
