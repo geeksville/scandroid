@@ -11,9 +11,10 @@ import scala.Enumeration
  */
 trait UsesPreferences {
 
-  def context: Context
+  /// Users of this mixin must provide a context
+  def acontext: Context
 
-  lazy val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+  lazy val preferences = PreferenceManager.getDefaultSharedPreferences(acontext)
 
   def stringPreference(s: String, defVal: String = "") = tryOrElse(preferences.getString(s, defVal), defVal)
   def intPreference(s: String, defVal: Int) = tryOrElse(preferences.getString(s, defVal.toString).toInt, defVal)
